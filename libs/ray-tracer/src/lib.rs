@@ -58,8 +58,13 @@ mod tests {
 
         #[test]
         fn negate() {
+            // na::Vector impls std::ops::Neg
+            use std::ops::Neg;
+
             let v = na::Vector3::new(1.0, 2.0, 3.0);
-            assert_relative_eq!(-v, na::Vector3::new(-1.0, -2.0, -3.0)); // na::Vector impls Neg
+            assert_relative_eq!(v.neg(), na::Vector3::new(-1.0, -2.0, -3.0));
+            assert_relative_eq!(v, na::Vector3::new(1.0, 2.0, 3.0));
+            assert_relative_eq!(-v, na::Vector3::new(-1.0, -2.0, -3.0));
             assert_relative_eq!(v, na::Vector3::new(1.0, 2.0, 3.0));
         }
 
