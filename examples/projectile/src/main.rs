@@ -1,4 +1,5 @@
 use nalgebra as na;
+use lib_canvas::{Canvas, Color};
 
 #[derive(Clone, Debug, PartialEq)]
 struct Projectile {
@@ -56,10 +57,12 @@ fn main() {
         na::Vector2::new(-0.01, 0.0),
     );
 
-    println!("({}, {})", p.position.x, p.position.y);
+    let c = Canvas::new(3, 3);
+    c.set_pixel(p.position.x, p.position.y, Color::new(0.9, 0.0, 0.1));
+
     while p.is_above_ground() {
         p = tick(&e, p);
-        println!("({}, {})", p.position.x, p.position.y);
+        c.set_pixel(p.position.x, p.position.y, Color::new(0.9, 0.0, 0.1));
     }
 }
 
