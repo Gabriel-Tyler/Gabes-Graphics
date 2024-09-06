@@ -1,3 +1,8 @@
+mod canvas;
+
+pub use canvas::Canvas;
+pub use canvas::Color;
+
 #[cfg(test)]
 mod tests {
     mod points_and_vectors {

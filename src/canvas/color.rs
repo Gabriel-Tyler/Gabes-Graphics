@@ -3,27 +3,40 @@ use approx::{AbsDiffEq, RelativeEq};
 use nalgebra as na;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub(crate) struct Color {
+pub struct Color {
     rgb: na::Vector3<f32>,
 }
 
 impl Color {
-    pub(crate) fn new(r: f32, g: f32, b: f32) -> Self {
+    pub fn new(r: f32, g: f32, b: f32) -> Self {
         Self {
             rgb: na::Vector3::new(r, g, b),
         }
     }
 
-    pub(crate) fn r(&self) -> f32 {
-        self.rgb.x
-    }
+    // pub(crate) fn r(&self) -> f32 {
+    //     self.rgb.x
+    // }
+    //
+    // pub(crate) fn g(&self) -> f32 {
+    //     self.rgb.y
+    // }
+    //
+    // pub(crate) fn b(&self) -> f32 {
+    //     self.rgb.z
+    // }
 
-    pub(crate) fn g(&self) -> f32 {
-        self.rgb.y
-    }
-
-    pub(crate) fn b(&self) -> f32 {
-        self.rgb.z
+    /// Scale each rgb component by max_color_value.
+    /// Then clamp each component between 0..=max_color_value.
+    /// Then return each component rounded to integers.
+    pub(crate) fn scale(&self, max_color_value: u8) -> (u8, u8, u8) {
+        let max_color_value = max_color_value as f32;
+        let rgb: na::Vector3<u8> = self
+            .rgb
+            .map(|x| (x * max_color_value)
+                .clamp(0.0, max_color_value)
+                .round() as u8);
+        (rgb.x, rgb.y, rgb.z)
     }
 }
 
@@ -103,15 +116,6 @@ impl RelativeEq for Color {
 mod tests {
     use super::*;
     use approx::assert_relative_eq;
-
-    #[test]
-    fn new() {
-        let c = Color::new(0.0, 0.5, 1.0);
-        assert_relative_eq!(c.r(), 0.0);
-        assert_relative_eq!(c.g(), 0.5);
-        assert_relative_eq!(c.b(), 1.0);
-        assert_relative_eq!(c, Color::new(0.0, 0.5, 1.0));
-    }
 
     #[test]
     fn add() {
