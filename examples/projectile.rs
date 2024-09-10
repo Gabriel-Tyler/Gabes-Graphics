@@ -85,7 +85,7 @@ fn main() {
     // Must check for velocity and acceleration.
     // Otherwise, the projectile may get stuck inside the view and cause an infinite loop.
     while p.is_in_view(width, height) && (p.has_velocity() || e.has_acceleration()) {
-        c.set_pixel(p.x(), height - 1 - p.y(), Color::new(0.0, 0.9, 0.1));
+        c.set_pixel(p.x(), height - 1 - p.y(), Color::new(1.0, 0.0, 0.1));
         p = tick(&e, p);
     }
 
