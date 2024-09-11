@@ -1,8 +1,5 @@
-mod canvas;
-mod math;
-
-pub use canvas::Canvas;
-pub use canvas::Color;
+pub mod canvas;
+pub mod math;
 
 #[cfg(test)]
 mod tests {
@@ -307,7 +304,7 @@ mod tests {
 
         mod shear {
             use nalgebra::{Point3, Affine3};
-            use crate::math::shear::Affine3Ext;
+            use crate::math::affine::Affine3Ext;
             use approx::assert_relative_eq;
 
             #[test]
@@ -360,9 +357,9 @@ mod tests {
         }
 
         mod chaining {
-            use nalgebra::{Affine3, Point3, Rotation3, Scale3, Translation3, Vector3};
+            use nalgebra::{Affine3, Matrix3, Matrix4, Point3, Rotation3, Scale3, Translation3, Vector3};
             use approx::assert_relative_eq;
-            use crate::math::shear::Affine3Ext;
+            use crate::math::affine::Affine3Ext;
 
             #[test]
             fn no_chain() {

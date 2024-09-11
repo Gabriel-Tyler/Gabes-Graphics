@@ -1,4 +1,4 @@
-pub(crate) mod shear {
+pub mod affine {
 
     // Transformations are algebraic entities that act on points and vectors.
     // An Affine transformation is a composition of non-uniform scaling, rotations, and translations.
@@ -16,7 +16,7 @@ pub(crate) mod shear {
 
     use nalgebra::{Affine3, Matrix4, RealField, Scale3};
 
-    pub(crate) trait Affine3Ext<T: RealField> {
+    pub trait Affine3Ext<T: RealField> {
         fn from_shear(xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Self;
         fn from_scale(scale: Scale3<T>) -> Self;
     }

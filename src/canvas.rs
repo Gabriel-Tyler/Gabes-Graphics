@@ -1,6 +1,6 @@
 pub mod color;
 
-pub use color::Color;
+use color::Color;
 
 pub struct Canvas {
     width: usize,
