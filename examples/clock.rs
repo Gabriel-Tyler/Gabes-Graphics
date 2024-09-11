@@ -1,5 +1,5 @@
 use std::fs;
-use nalgebra::{Affine3, Point3, Rotation3, Scale3, Translation3, Vector2, Vector3};
+use nalgebra::{Affine3, Point3, Rotation3, Scale3, Translation3, Vector3};
 use gabes_graphics::{
     canvas::Canvas,
     canvas::color::Color,
@@ -7,11 +7,11 @@ use gabes_graphics::{
 use gabes_graphics::math::affine::Affine3Ext;
 
 fn main() {
-    let width = 200;
-    let height = 200;
+    let width = 50;
+    let height = 50;
     let mut canvas = Canvas::new(width, height);
 
-    let color = Color::new(0.0, 1.0, 0.2);
+    let color = Color::new(0.0, 1.0, 0.0);
 
     let point = Point3::origin();
 
@@ -20,7 +20,7 @@ fn main() {
         use std::f32::consts::PI;
 
         // move point to 12o'clock position
-        let translation = Translation3::new(0.0, 80.0, 0.0);
+        let translation = Translation3::new(0.0, 20.0, 0.0);
 
         // rotate point around origin clockwise
         let axis = -Vector3::z_axis(); // negative z axis, this makes the rotation in the clockwise direction
@@ -41,7 +41,6 @@ fn main() {
 
         canvas.set_pixel(x, y, color)
     }
-
 
     // write canvas to ppm file
     let ppm = canvas.to_ppm();
