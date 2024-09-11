@@ -291,42 +291,88 @@ mod tests {
                 let half_quarter = f32::consts::FRAC_PI_4;
                 let full_quarter = f32::consts::FRAC_PI_2;
 
-                let half_quarter_rot_inv = Rotation3::from_axis_angle(&axis, half_quarter);
-                let full_quarter_rot_inv = Rotation3::from_axis_angle(&axis, full_quarter);
+                let half_quarter_rot = Rotation3::from_axis_angle(&axis, half_quarter);
+                let full_quarter_rot = Rotation3::from_axis_angle(&axis, full_quarter);
 
                 let p = Point3::new(0.0, 1.0, 0.0);
                 let v = Vector3::new(0.0, 1.0, 0.0);
 
-                assert_relative_eq!(half_quarter_rot_inv * p, Point3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
-                assert_relative_eq!(full_quarter_rot_inv * p, Point3::new(-1.0, 0.0, 0.0));
+                assert_relative_eq!(half_quarter_rot * p, Point3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
+                assert_relative_eq!(full_quarter_rot * p, Point3::new(-1.0, 0.0, 0.0));
 
-                assert_relative_eq!(half_quarter_rot_inv * v, Vector3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
-                assert_relative_eq!(full_quarter_rot_inv * v, Vector3::new(-1.0, 0.0, 0.0));
+                assert_relative_eq!(half_quarter_rot * v, Vector3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
+                assert_relative_eq!(full_quarter_rot * v, Vector3::new(-1.0, 0.0, 0.0));
             }
         }
 
         mod shear {
-            use nalgebra::Matrix4;
-            use crate::math::shear::Shear3;
+            use nalgebra::Point3;
+            use crate::math::shear;
             use approx::assert_relative_eq;
 
             #[test]
-            fn x_from_y() {}
+            fn x_from_y() {
+                let shear = shear::from_shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(5.0 , 3.0, 4.0));
+            }
 
             #[test]
-            fn x_from_z() {}
+            fn x_from_z() {
+                let shear = shear::from_shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(6.0 , 3.0, 4.0));
+            }
 
             #[test]
-            fn y_from_x() {}
+            fn y_from_x() {
+                let shear = shear::from_shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(2.0 , 5.0, 4.0));
+            }
 
             #[test]
-            fn y_from_z() {}
+            fn y_from_z() {
+                let shear = shear::from_shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(2.0 , 7.0, 4.0));
+            }
 
             #[test]
-            fn z_from_x() {}
+            fn z_from_x() {
+                let shear = shear::from_shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(2.0 , 3.0, 6.0));
+            }
 
             #[test]
-            fn z_from_y() {}
+            fn z_from_y() {
+                let shear = shear::from_shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+                let p = Point3::new(2.0, 3.0, 4.0);
+
+                assert_relative_eq!(shear * p, Point3::new(2.0 , 3.0, 7.0));
+            }
+        }
+
+        mod chaining {
+            use nalgebra::{Affine3, Rotation3, Scale3, Translation3, Vector3};
+            use std::f32;
+            use crate::math::shear::Affine3Ext;
+
+            #[test]
+            fn chains() {
+                let r = Rotation3::from_axis_angle(&Vector3::x_axis(), f32::consts::FRAC_PI_2);
+                let s = Scale3::new(5.0, 5.0, 5.0);
+                let t = Translation3::new(10.0, 5.0, 7.0);
+                let a = Affine3::from_shear(1.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+
+                let x = r * t * a;
+            }
         }
     }
 }
