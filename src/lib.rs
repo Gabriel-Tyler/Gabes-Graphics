@@ -157,11 +157,11 @@ mod tests {
             fn homogeneous() {
                 let t = Translation3::new(2.0, 5.0, 8.0);
                 assert_relative_eq!(t.to_homogeneous(), Matrix4::new(
-                1.0, 0.0, 0.0, 2.0,
-                0.0, 1.0, 0.0, 5.0,
-                0.0, 0.0, 1.0, 8.0,
-                0.0, 0.0, 0.0, 1.0,
-            ));
+                    1.0, 0.0, 0.0, 2.0,
+                    0.0, 1.0, 0.0, 5.0,
+                    0.0, 0.0, 1.0, 8.0,
+                    0.0, 0.0, 0.0, 1.0,
+                ));
 
                 let v = Vector3::new(2.0, 3.0, 4.0);
                 assert_relative_eq!(v.to_homogeneous(), Vector4::new(2.0, 3.0, 4.0, 0.0));
@@ -173,9 +173,7 @@ mod tests {
                 let v = Vector3::new(-3.0, 4.0, 5.0);
                 // There is no translation defined for Vectors
                 assert_relative_eq!(
-                Vector3::from_homogeneous(t.to_homogeneous() * v.to_homogeneous()).unwrap(),
-                v
-            );
+                Vector3::from_homogeneous(t.to_homogeneous() * v.to_homogeneous()).unwrap(), v);
             }
         }
 
@@ -187,11 +185,11 @@ mod tests {
             fn homogeneous() {
                 let s = Scale3::new(2.0, 3.0, 4.0);
                 assert_relative_eq!(s.to_homogeneous(), Matrix4::new(
-                2.0, 0.0, 0.0, 0.0,
-                0.0, 3.0, 0.0, 0.0,
-                0.0, 0.0, 4.0, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            ));
+                    2.0, 0.0, 0.0, 0.0,
+                    0.0, 3.0, 0.0, 0.0,
+                    0.0, 0.0, 4.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0
+                ));
             }
 
             #[test]
@@ -235,17 +233,17 @@ mod tests {
                 let half_quarter = f32::consts::FRAC_PI_4;
                 let full_quarter = f32::consts::FRAC_PI_2;
 
-                let half_quarter_x_rot = Rotation3::from_axis_angle(&axis, half_quarter);
-                let full_quarter_x_rot = Rotation3::from_axis_angle(&axis, full_quarter);
+                let half_quarter_rot = Rotation3::from_axis_angle(&axis, half_quarter);
+                let full_quarter_rot = Rotation3::from_axis_angle(&axis, full_quarter);
 
                 let p = Point3::new(0.0, 1.0, 0.0);
                 let v = Vector3::new(0.0, 1.0, 0.0);
 
-                assert_relative_eq!(half_quarter_x_rot * p, Point3::new(0.0, f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0));
-                assert_relative_eq!(full_quarter_x_rot * p, Point3::new(0.0, 0.0, 1.0));
+                assert_relative_eq!(half_quarter_rot * p, Point3::new(0.0, f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot * p, Point3::new(0.0, 0.0, 1.0));
 
-                assert_relative_eq!(half_quarter_x_rot * v, Vector3::new(0.0, f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0));
-                assert_relative_eq!(full_quarter_x_rot * v, Vector3::new(0.0, 0.0, 1.0));
+                assert_relative_eq!(half_quarter_rot * v, Vector3::new(0.0, f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot * v, Vector3::new(0.0, 0.0, 1.0));
             }
 
             #[test]
@@ -254,18 +252,83 @@ mod tests {
                 let half_quarter = f32::consts::FRAC_PI_4;
                 let full_quarter = f32::consts::FRAC_PI_2;
 
-                let half_quarter_x_rot_inv = Rotation3::from_axis_angle(&axis, half_quarter).inverse();
-                let full_quarter_x_rot_inv = Rotation3::from_axis_angle(&axis, full_quarter).inverse();
+                let half_quarter_rot_inv = Rotation3::from_axis_angle(&axis, half_quarter).inverse();
+                let full_quarter_rot_inv = Rotation3::from_axis_angle(&axis, full_quarter).inverse();
 
                 let p = Point3::new(0.0, 1.0, 0.0);
                 let v = Vector3::new(0.0, 1.0, 0.0);
 
-                assert_relative_eq!(half_quarter_x_rot_inv * p, Point3::new(0.0, f32::sqrt(2.0)/2.0, -f32::sqrt(2.0)/2.0));
-                assert_relative_eq!(full_quarter_x_rot_inv * p, Point3::new(0.0, 0.0, -1.0));
+                assert_relative_eq!(half_quarter_rot_inv * p, Point3::new(0.0, f32::sqrt(2.0)/2.0, -f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot_inv * p, Point3::new(0.0, 0.0, -1.0));
 
-                assert_relative_eq!(half_quarter_x_rot_inv * v, Vector3::new(0.0, f32::sqrt(2.0)/2.0, -f32::sqrt(2.0)/2.0));
-                assert_relative_eq!(full_quarter_x_rot_inv * v, Vector3::new(0.0, 0.0, -1.0));
+                assert_relative_eq!(half_quarter_rot_inv * v, Vector3::new(0.0, f32::sqrt(2.0)/2.0, -f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot_inv * v, Vector3::new(0.0, 0.0, -1.0));
             }
+
+            #[test]
+            fn about_y_axis() {
+                let axis = Vector3::y_axis();
+                let half_quarter = f32::consts::FRAC_PI_4;
+                let full_quarter = f32::consts::FRAC_PI_2;
+
+                let half_quarter_rot = Rotation3::from_axis_angle(&axis, half_quarter);
+                let full_quarter_rot = Rotation3::from_axis_angle(&axis, full_quarter);
+
+                let p = Point3::new(0.0, 0.0, 1.0);
+                let v = Vector3::new(0.0, 0.0, 1.0);
+
+                assert_relative_eq!(half_quarter_rot * p, Point3::new(f32::sqrt(2.0)/2.0, 0.0, f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot * p, Point3::new(1.0, 0.0, 0.0));
+
+                assert_relative_eq!(half_quarter_rot * v, Vector3::new(f32::sqrt(2.0)/2.0, 0.0, f32::sqrt(2.0)/2.0));
+                assert_relative_eq!(full_quarter_rot * v, Vector3::new(1.0, 0.0, 0.0));
+            }
+
+            #[test]
+            fn about_z_axis() {
+                let axis = Vector3::z_axis();
+                let half_quarter = f32::consts::FRAC_PI_4;
+                let full_quarter = f32::consts::FRAC_PI_2;
+
+                let half_quarter_rot_inv = Rotation3::from_axis_angle(&axis, half_quarter);
+                let full_quarter_rot_inv = Rotation3::from_axis_angle(&axis, full_quarter);
+
+                let p = Point3::new(0.0, 1.0, 0.0);
+                let v = Vector3::new(0.0, 1.0, 0.0);
+
+                assert_relative_eq!(half_quarter_rot_inv * p, Point3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
+                assert_relative_eq!(full_quarter_rot_inv * p, Point3::new(-1.0, 0.0, 0.0));
+
+                assert_relative_eq!(half_quarter_rot_inv * v, Vector3::new(-f32::sqrt(2.0)/2.0, f32::sqrt(2.0)/2.0, 0.0));
+                assert_relative_eq!(full_quarter_rot_inv * v, Vector3::new(-1.0, 0.0, 0.0));
+            }
+        }
+
+        mod shear {
+            use nalgebra::Matrix4;
+            use approx::assert_relative_eq;
+
+            struct Shear3 {
+                matrix: Matrix4,
+            }
+
+            #[test]
+            fn x_from_y() {}
+
+            #[test]
+            fn x_from_z() {}
+
+            #[test]
+            fn y_from_x() {}
+
+            #[test]
+            fn y_from_z() {}
+
+            #[test]
+            fn z_from_x() {}
+
+            #[test]
+            fn z_from_y() {}
         }
     }
 }
