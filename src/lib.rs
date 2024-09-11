@@ -306,13 +306,13 @@ mod tests {
         }
 
         mod shear {
-            use nalgebra::Point3;
-            use crate::math::shear;
+            use nalgebra::{Point3, Affine3};
+            use crate::math::shear::Affine3Ext;
             use approx::assert_relative_eq;
 
             #[test]
             fn x_from_y() {
-                let shear = shear::from_shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                let shear = Affine3::from_shear(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(5.0 , 3.0, 4.0));
@@ -320,7 +320,7 @@ mod tests {
 
             #[test]
             fn x_from_z() {
-                let shear = shear::from_shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+                let shear = Affine3::from_shear(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(6.0 , 3.0, 4.0));
@@ -328,7 +328,7 @@ mod tests {
 
             #[test]
             fn y_from_x() {
-                let shear = shear::from_shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+                let shear = Affine3::from_shear(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(2.0 , 5.0, 4.0));
@@ -336,7 +336,7 @@ mod tests {
 
             #[test]
             fn y_from_z() {
-                let shear = shear::from_shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+                let shear = Affine3::from_shear(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(2.0 , 7.0, 4.0));
@@ -344,7 +344,7 @@ mod tests {
 
             #[test]
             fn z_from_x() {
-                let shear = shear::from_shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+                let shear = Affine3::from_shear(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(2.0 , 3.0, 6.0));
@@ -352,7 +352,7 @@ mod tests {
 
             #[test]
             fn z_from_y() {
-                let shear = shear::from_shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+                let shear = Affine3::from_shear(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
                 let p = Point3::new(2.0, 3.0, 4.0);
 
                 assert_relative_eq!(shear * p, Point3::new(2.0 , 3.0, 7.0));
@@ -360,18 +360,40 @@ mod tests {
         }
 
         mod chaining {
-            use nalgebra::{Affine3, Rotation3, Scale3, Translation3, Vector3};
-            use std::f32;
+            use nalgebra::{Affine3, Point3, Rotation3, Scale3, Translation3, Vector3};
+            use approx::assert_relative_eq;
             use crate::math::shear::Affine3Ext;
 
             #[test]
-            fn chains() {
-                let r = Rotation3::from_axis_angle(&Vector3::x_axis(), f32::consts::FRAC_PI_2);
-                let s = Scale3::new(5.0, 5.0, 5.0);
+            fn no_chain() {
+                let r = Rotation3::from_axis_angle(&Vector3::x_axis(), std::f32::consts::FRAC_PI_2);
+                let sc = Scale3::new(5.0, 5.0, 5.0);
                 let t = Translation3::new(10.0, 5.0, 7.0);
-                let a = Affine3::from_shear(1.0, 1.0, 0.0, 0.0, 0.0, 0.0);
 
-                let x = r * t * a;
+                let p1 = Point3::new(1.0, 0.0, 1.0);
+
+                let p2 = r * p1;
+                assert_relative_eq!(p2, Point3::new(1.0, -1.0, 0.0));
+
+                let p3 = sc * p2; //                            ≈ 0.0
+                assert_relative_eq!(p3, Point3::new(5.0, -5.0, -2.1855695e-7));
+
+                let p4 = t * p3;
+                assert_relative_eq!(p4, Point3::new(15.0, 0.0, 7.0));
+            }
+
+            #[test]
+            fn with_chain() {
+                let t = Translation3::new(10.0, 5.0, 7.0);
+                let sc = Affine3::from_scale(Scale3::new(5.0, 5.0, 5.0));  // convert to Affine for use in matrix multiplication
+                let r = Rotation3::from_axis_angle(&Vector3::x_axis(), std::f32::consts::FRAC_PI_2);
+                let sh = Affine3::from_shear(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+                let p = Point3::new(1.0, 0.0, 1.0);
+
+                assert_relative_eq!((t * sc * r * sh) * p, Point3::new(15.0, 0.0, 7.0));
+                //                   ^^^^^^^^^^^^^^^
+                // Isn't this beautiful?
             }
         }
     }
