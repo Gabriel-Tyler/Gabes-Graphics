@@ -45,6 +45,6 @@ fn main() {
 
     // write canvas to ppm file
     let ppm = canvas.to_ppm();
-    fs::write("clock.ppm", ppm).expect("could not write to file");
+    fs::write("examples/images/clock.ppm", ppm).expect("could not write to file");
 }
 

@@ -94,7 +94,7 @@ fn main() {
 
     // Write ppm formatted data to string then to file.
     let ppm = c.to_ppm();
-    fs::write("path.ppm", ppm).expect("could not write to file");
+    fs::write("examples/images/path.ppm", ppm).expect("could not write to file");
 }
 
 
