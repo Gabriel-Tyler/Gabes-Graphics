@@ -7,6 +7,10 @@ edition = "2021"
 name = "projectile"
 path = "examples/projectile.rs"
 
+[[example]]
+name = "clock"
+path = "examples/clock.rs"
+
 [dependencies]
 nalgebra = "0.33.0"
 approx = "0.5.1"

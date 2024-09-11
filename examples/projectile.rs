@@ -1,7 +1,9 @@
 use std::fs;
 use nalgebra as na;
-use gabes_graphics::canvas::Canvas;
-use gabes_graphics::canvas::color::Color;
+use gabes_graphics::{
+    canvas::Canvas,
+    canvas::color::Color,
+};
 
 #[derive(Clone, Debug, PartialEq)]
 struct Projectile {

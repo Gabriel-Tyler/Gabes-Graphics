@@ -19,6 +19,8 @@ impl Canvas {
     }
 
     /// Draw a color at the given coordinate
+    ///
+    /// (0, 0) is the "top left"
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
         assert!(x < self.width && y < self.height);
 
