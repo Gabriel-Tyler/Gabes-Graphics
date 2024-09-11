@@ -392,8 +392,7 @@ mod tests {
                 let p = Point3::new(1.0, 0.0, 1.0);
 
                 assert_relative_eq!((t * sc * r * sh) * p, Point3::new(15.0, 0.0, 7.0));
-                //                   ^^^^^^^^^^^^^^^
-                // Isn't this beautiful?
+                // Isn't this cool?  ^^^^^^^^^^^^^^^
             }
         }
     }
