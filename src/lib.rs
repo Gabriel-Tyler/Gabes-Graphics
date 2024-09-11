@@ -1,4 +1,5 @@
 mod canvas;
+mod math;
 
 pub use canvas::Canvas;
 pub use canvas::Color;
@@ -306,11 +307,8 @@ mod tests {
 
         mod shear {
             use nalgebra::Matrix4;
+            use crate::math::shear::Shear3;
             use approx::assert_relative_eq;
-
-            struct Shear3 {
-                matrix: Matrix4,
-            }
 
             #[test]
             fn x_from_y() {}
