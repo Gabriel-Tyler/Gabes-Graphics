@@ -4,6 +4,11 @@ pub(crate) mod shear {
     // An Affine transformation is a composition of non-uniform scaling, rotations, and translations.
     // Geometrically, it preserves lines and parallelism, but not necessarily Euclidean distances and angles.
 
+    // Shear is an example of an Affine transformation.
+    // Shear displaces each point in a fixed direction by an amount proportional to its signed distance
+    //  from a given line parallel to that direction.
+    // In other words, x is affected by y and z, and vice versa, all at once, as determined by the parameters.
+
     // I'm always jumping at the chance to use extension traits just because they are cool.
     // Implement an associated method that creates an Affine transformation from shear parameters.
     // You can then use the Affine object in transformation chaining (matrix mult under the hood).
