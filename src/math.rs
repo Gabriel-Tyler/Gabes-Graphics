@@ -14,7 +14,7 @@ pub(crate) mod shear {
     // You can then use the Affine object in transformation chaining (matrix mult under the hood).
     // e.g., (Affine * Rotation * Translation) * Vector
 
-    use nalgebra::{Affine3, Matrix, Matrix4, RealField, Scale3};
+    use nalgebra::{Affine3, Matrix4, RealField, Scale3};
 
     pub(crate) trait Affine3Ext<T: RealField> {
         fn from_shear(xy: T, xz: T, yx: T, yz: T, zx: T, zy: T) -> Self;
